@@ -19,6 +19,8 @@ class ViewController: UIViewController {
     
     var thiefArray = [UIImageView]()
     
+    var highScore = 0
+    
     @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var scoreLabel: UILabel!
@@ -49,6 +51,22 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         scoreLabel.text="Score: \(score)"
+        
+        let storedHS=UserDefaults.standard.object(forKey: "highscore")
+        
+        if storedHS == nil {
+            highScore = 0
+            highscoreLabel.text = "highscore: \(highScore)"
+            
+        }
+        
+        if let newScore = storedHS as? Int {
+            highScore = newScore
+            highscoreLabel.text = "highscore: \(highScore)"
+            
+        }
+        
+        
         
         thief1.isUserInteractionEnabled = true
         thief2.isUserInteractionEnabled = true
@@ -97,6 +115,13 @@ class ViewController: UIViewController {
     @objc func hideThief(){
         for thief in thiefArray{
             thief.isHidden=true
+        }
+        
+        if self.score > self.highScore {
+            self.highScore = self.score
+            highscoreLabel.text="Highscore: \(self.highScore)"
+            UserDefaults.standard.set(self.highScore,forKey: "highscore")
+            
         }
         
        let random = Int ( arc4random_uniform(UInt32(thiefArray.count-1)))
